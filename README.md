@@ -1,5 +1,5 @@
 # bigramindo
-bigram from starch using python language, from indonesia
+bigram from starch using python language, menggunakan kalimat berbahasa indonesia
 
 # Data
 
