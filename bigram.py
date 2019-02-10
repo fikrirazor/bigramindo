@@ -29,11 +29,11 @@ for i in range(len(datatoken)):
 			listOfBigrams.append((datatoken[i], datatoken[i + 1]))
 
 			if (datatoken[i], datatoken[i+1]) in bigramCounts:
-				bigramCounts[(data[i], datatoken[i + 1])] += 1
+				bigramCounts[(datatoken[i], datatoken[i + 1])] += 1
 			else:
 				bigramCounts[(datatoken[i], datatoken[i + 1])] = 1
 
-	if data[i] in unigramCounts:
+	if datatoken[i] in unigramCounts:
 			unigramCounts[datatoken[i]] += 1
 	else:
 		unigramCounts[datatoken[i]] = 1
