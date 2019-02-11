@@ -5,25 +5,28 @@ Created on Sun Feb 10 23:44:06 2019
 @author: Rozan
 """
 
-S = [1,2,3,4,5,6]
-A = [1,2,3,4,5]
-B = [2,4,6]
-
-s=len(S)
-a=len(A)
-b=len(B)
-iab=len(list(set(A) & set(B))) 
-peluanga = a/s 
-peluangb = b/s
-peluangiab = iab/s
-peluangAdengansyaratB = peluangiab/peluangb
-tespeluang = (peluanga*peluangb)/peluangb
-
+#countofwords
+#menghitung jumlah kata
 W = ("saya","makan","nasi","goreng","di","rumah")
+jumlahdata = {}
+pw=len(W)
+for i in range (pw):
+    if W[i] in jumlahdata:
+        jumlahdata[W[i]] += 1
+    else:
+        jumlahdata[W[i]] = 1
+#menghitung jumlah kata 2    
+from collections import Counter
+counts = Counter(W)
+print(counts)
+#menghitung jumlah kata 3
+def countWords(A):
+    dic={}
+    for i in A:
+        if not i in dic:
+            dic[i] = A.count(i)
+    return dic
 
-w = len(W)
-wkurang1 = len(W)-1
-peluangw=w/w
-peluangwkurang1 = wkurang1/w
-peluangwndengansyaratwnkurang1 = (peluangw*peluangwkurang1)/peluangwkurang1
+dic = countWords(W)
+sorted_items=sorted(dic.items())
 
