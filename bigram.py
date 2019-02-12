@@ -15,7 +15,7 @@ from collections import OrderedDict
 import heapq 
 import pandas as pd
 from nltk import word_tokenize
-
+import string
 
 # In[3]:
 
@@ -37,7 +37,7 @@ data.tail()
 
 #tokenisasi menggunakan nltk
 datatoken = data.apply(lambda row: wt(row['Berita']), axis=1)
-print(datatoken.head(10))
+#print(datatoken.head(10))
 
 
 # In[6]:
@@ -45,7 +45,7 @@ print(datatoken.head(10))
 
 #dari pandas ke list
 datatoken = datatoken.values.tolist()
-print(datatoken)
+#print(datatoken)
 
 
 # In[7]:
@@ -53,7 +53,10 @@ print(datatoken)
 
 #join list of list
 datatoken = sum(datatoken, [])
-print(datatoken)
+datatoken = [w.lower() for w in datatoken]
+datatoken= [''.join(c for c in s if c not in string.punctuation) for s in datatoken]
+datatoken = [s for s in datatoken if s]
+#print(datatoken)
 
 
 # In[8]:
@@ -97,7 +100,6 @@ for unigram in datatoken:
 
 # In[10]:
 
-
 """  ADD ONE SMOTHING """ 
 def addOneSmothing(listOfBigrams, unigramCounts, bigramCounts):
     listOfProb = {}
@@ -108,13 +110,12 @@ def addOneSmothing(listOfBigrams, unigramCounts, bigramCounts):
         cStar[bigram] = (bigramCounts[bigram] + 1) * unigramCounts[word1] / (unigramCounts[word1] + len(unigramCounts))
         return listOfProb, cStar
       
-#addOneSmothing(listOfBigrams, unigramCounts, bigramCounts)
+addOneSmothing(listOfBigrams, unigramCounts, bigramCounts)
 
 
 # In[12]:
-
-
-testset = 'sam','am','hate'
+testset = []
+testset = 'akan','membaik'
 """  PERPLEXITY """  
 perplexity = 1
 N = 0
@@ -125,7 +126,7 @@ for i in testset:
         perplexity = perplexity * (1/uniprob[i])
         
 perplexity = pow(perplexity, 1/float(N))
-print(perplexity)
+#print("perplexity :"+str(perplexity))
 
 
 # In[13]:
@@ -134,14 +135,14 @@ print(perplexity)
 """  PREDIKSI KATA YANG 	AKAN MUNCUL"""
 
 matchedBigrams = []
-checkForThisBigram = 'i'
+checkForThisBigram = 'ada'
 topDict = {}  
 for bigram in listOfBigrams:
     if checkForThisBigram == bigram[0]:
             matchedBigrams.append(bigram[0]+" "+bigram[1])
          
             
-print(matchedBigrams)            
+#print(matchedBigrams)            
 	
 for singleBigram in matchedBigrams:
 		topDict[singleBigram] = valueprob[singleBigram]
