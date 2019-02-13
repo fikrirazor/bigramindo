@@ -17,6 +17,7 @@ import pandas as pd
 from nltk import word_tokenize
 import string
 
+
 # In[3]:
 
 
@@ -49,7 +50,7 @@ datatoken = datatoken.values.tolist()
 
 
 # In[7]:
-
+"""  PREPROCESSING """ 
 
 #join list of list
 datatoken = sum(datatoken, [])
@@ -60,7 +61,7 @@ datatoken = [s for s in datatoken if s]
 
 
 # In[8]:
-
+"""  MEMBUAT MODEL BIGRAM """ 
 
 listOfBigrams = []
 bigramCounts = {}
@@ -83,7 +84,7 @@ for i in range(len(datatoken)):
 
 
 # In[9]:
-
+"""  PELUANG BIGRAM & UNIGRAM """ 
 
 valueprob = OrderedDict()
 listOfProb = {}
@@ -96,7 +97,10 @@ for bigram in listOfBigrams:
 uniprob = {}
 for unigram in datatoken:
     uniprob[unigram] = 1/ unigramCounts.get(unigram)
-
+#print(bigramCounts)   
+#print(unigramCounts)    
+#print(uniprob)
+#print(listOfProb)
 
 # In[10]:
 
@@ -114,31 +118,59 @@ addOneSmothing(listOfBigrams, unigramCounts, bigramCounts)
 
 
 # In[12]:
-testset = []
-testset = 'akan','membaik'
-"""  PERPLEXITY """  
-perplexity = 1
-N = 0
+"""  MENGHITUNG PELUANG BIGRAM """ 
+print('=================== MENGHITUNG PELUANG KATA ==================')
+teskata = []
 
-for i in testset:
-    if i in uniprob:
-        N += 1
-        perplexity = perplexity * (1/uniprob[i])
+valuekata = OrderedDict()
+tesvalue = OrderedDict()
+test1 = ['hujan','lebat','sehingga','akan']
+test2 = ['saya','makan','nasi']
+test3 = ['hari','ini','libur']
+test4 = ['berita','ini','sangat','membantu'] 
+test5 = ['pada','tanggal','23']
+a = 0
+print("\n Kalimat :"+str(test5))
+for i in range(len(test5)):
+	 if i < len(test5) - 1:
+			teskata.append((test5[i], test5[i + 1]))
+print("\n Bigram :"+str(teskata))
+for word in teskata:
+    word1 = word[0]
+    word2 = word[1]
+    tesvalue[word1+" "+word2] = 0
+
+    
+for key in tesvalue:
+     if key in valueprob:       
+        valuekata[key] = valueprob[key]
+ 
+hasil = 1
+for key in tesvalue:
+     if key in valuekata:       
+        tesvalue[key] = valuekata.get(key)
         
-perplexity = pow(perplexity, 1/float(N))
-#print("perplexity :"+str(perplexity))
+for value in tesvalue:
+        a = tesvalue.get(key) 
+        hasil *= a    
+    
+                
+print("\n Nilai Peluang Bigram :"+str(tesvalue))
+print("\n Hasil Peluang :"+str(hasil))
 
 
 # In[13]:
 
 
 """  PREDIKSI KATA YANG 	AKAN MUNCUL"""
-
+print('\n =================== PREDIKSI  KATA SELANJUTNYA ==================')
 matchedBigrams = []
-checkForThisBigram = 'ada'
+checkForThisBigram = 'kendaraan'
+print("Kalimat :\n"+str(checkForThisBigram))
+lastword = checkForThisBigram
 topDict = {}  
 for bigram in listOfBigrams:
-    if checkForThisBigram == bigram[0]:
+    if lastword == bigram[0]:
             matchedBigrams.append(bigram[0]+" "+bigram[1])
          
             
@@ -147,11 +179,25 @@ for bigram in listOfBigrams:
 for singleBigram in matchedBigrams:
 		topDict[singleBigram] = valueprob[singleBigram]
 
-topBigrams = heapq.nlargest(5, topDict, key=topDict.get)
+topBigrams = heapq.nlargest(10, topDict, key=topDict.get)
+
 for b in topBigrams:
 		print( b+" : "+str(topDict[b])+"\n")
+        
 
-#print(unigramCounts)    
-#print(uniprob)
-#print(listOfBigrams)
+# In[14]:
+print('\n =================== PERPLEXITY MODEL  ==================')       
+testset = []
+testset = 'penampakan','bulan'
+"""  PERPLEXITY """
+perplexity = 1
+N = 0
 
+for i in testset:
+    if i in uniprob:
+        N += 1
+        perplexity = perplexity * (1/uniprob[i])
+
+perplexity = pow(perplexity, 1/float(N))
+print("testset :"+str(testset))
+print("perplexity :"+str(perplexity))
